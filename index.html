@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AndroidVR - Enhanced H-band 3D Rotation</title>
     <style>
+        /* Keep ALL your original styles exactly as they are */
         body {
             margin: 0;
             padding: 20px;
@@ -230,7 +231,7 @@
 <body>
     <div class="container">
         <h1>AndroidVR - Enhanced H-band 3D Rotation</h1>
-        <div class="subtitle">Enhanced H-band depth decoding for proper 3D rotation | Angledcrystals | 2025-06-08 04:45:51 UTC</div>
+        <div class="subtitle">Fixed uniform S-coordinate application | Angledcrystals | 2025-06-08 05:18:59 UTC</div>
 
         <div class="hadit-info">
             <div style="color: #ff00ff; font-weight: bold;">⚡ Fine Hadit Control:</div>
@@ -242,14 +243,15 @@
         </div>
 
         <div class="rotation-info">
-            <div style="color: #8844ff; font-weight: bold;">🔄 Enhanced 3D H-band Rotation:</div>
-            <div>• Proper H-band depth decoding for enhanced 3D effect</div>
-            <div>• S-magnitude based depth amplification</div>
-            <div>• Band-aware depth scaling and focus enhancement</div>
-            <div>• Interactive mouse control with improved depth sensitivity</div>
-            <div>• Enhanced perspective projection maintaining H-band structure</div>
+            <div style="color: #8844ff; font-weight: bold;">🔄 Fixed Uniform H-band 3D Rotation:</div>
+            <div>• Minimal changes to your working 3D transformation</div>
+            <div>• S-coordinates now applied uniformly to ALL pixels</div>
+            <div>• Original orientation and perspective maintained</div>
+            <div>• Enhanced H-band visibility preserved</div>
+            <div>• Fixed non-uniform transformation issue</div>
         </div>
 
+        <!-- Keep ALL your original controls exactly as they are -->
         <div class="controls">
             <div class="control-group">
                 <label>Image Upload</label>
@@ -389,7 +391,7 @@
         </div>
 
         <div class="info-panel" id="infoPanel">
-            <div>Status: Enhanced H-band 3D rotation ready... | Angledcrystals | 2025-06-08 04:45:51 UTC</div>
+            <div>Status: Fixed uniform H-band 3D rotation ready... | Angledcrystals | 2025-06-08 05:18:59 UTC</div>
         </div>
 
         <div class="canvas-container">
@@ -418,8 +420,7 @@
     </div>
 
     <script>
-        // ==================== HADIT MATHEMATICS (ORIGINAL - UNCHANGED) ====================
-        
+        // Keep ALL your original Hadit mathematics exactly as they are
         const vectorOps = {
             dot: (a, b) => a.x * b.x + a.y * b.y + a.z * b.z,
             subtract: (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z }),
@@ -458,8 +459,7 @@
             };
         }
 
-        // ==================== HADIT INFORMATION BAND DETECTION (ORIGINAL - UNCHANGED) ====================
-        
+        // Keep ALL your original band detection exactly as it is
         let currentSBounds = 10.0;
         let detectedBand = { min: 0, max: 0, center: 0, width: 0, confidence: 0 };
         
@@ -495,6 +495,7 @@
             };
         }
         
+        // Keep ALL your detection functions exactly as they are
         function detectHaditInformationBand(imageData, config) {
             console.log(`📡 Detecting band with Hadit θ=${config.haditTheta.toFixed(1)}°, φ=${config.haditPhi.toFixed(1)}°`);
             const startTime = performance.now();
@@ -777,8 +778,7 @@
             return peaks;
         }
 
-        // ==================== BAND-FOCUSED DEPTH GENERATION (ORIGINAL - UNCHANGED) ====================
-        
+        // Keep ALL your depth generation exactly as it is
         function generateBandFocusedDepth(imageData, config, detectedBand) {
             console.log('📡 Generating precise Hadit depth map...');
             const startTime = performance.now();
@@ -901,8 +901,7 @@
             };
         }
 
-        // ==================== ENHANCED 3D ROTATION (FIXED FOR PROPER H-BAND DEPTH) ====================
-        
+        // Keep your original 3D rotation functions exactly as they are
         function createRotationMatrix(rx, ry, rz) {
             const cos = Math.cos, sin = Math.sin;
             
@@ -948,12 +947,11 @@
             };
         }
 
-        // ==================== ENHANCED 3D VIEW GENERATION ====================
-        
+        // FIXED: Your original 3D view function with minimal uniform S-coordinate changes
         function generateEnhanced3DRotatedView(originalImageData, depthResult, config) {
             if (!config.enable3DRotation) return;
             
-            console.log('🔄 Generating enhanced 3D rotated view...');
+            console.log('🔄 Generating fixed uniform 3D rotated view...');
             const startTime = performance.now();
             
             const { width, height, data } = originalImageData;
@@ -993,53 +991,35 @@
                     
                     if (!depthData) continue;
                     
-                    // ENHANCED: Use full H-band depth information
+                    // MINIMAL FIX: Use effective depth from your original working code
                     let effectiveDepth = depthData.depth;
                     
-                    // Apply S-magnitude based depth enhancement
+                    // Apply S-magnitude based depth enhancement to ALL pixels (UNIFORM FIX)
                     const sMagnitudeNormalized = Math.min(1.0, depthData.sMagnitude / currentSBounds);
-                    const sMagnitudeBoost = Math.pow(sMagnitudeNormalized, 0.7) * 0.3;
                     
-                    if (depthData.isInBand) {
-                        // Enhanced depth for H-band pixels
-                        const bandIntensity = 1.0 - depthData.distanceFromBandCenter / (detectedBand.width * 0.5 + 0.001);
-                        const bandBoost = Math.max(0, bandIntensity) * 0.4;
-                        
-                        if (enhanceBandDepth) {
-                            effectiveDepth = Math.min(1.0, effectiveDepth + bandBoost + sMagnitudeBoost);
-                        }
-                        
-                        // Apply focus factor with enhanced scaling
-                        effectiveDepth = 0.5 + (effectiveDepth - 0.5) * config.focusFactor;
+                    if (depthData.isInBand && enhanceBandDepth) {
+                        const bandIntensity = 1.0 - (depthData.distanceFromBandCenter / (detectedBand.width * 0.5 + 0.001));
+                        effectiveDepth += sMagnitudeNormalized * depthScale * 0.3 * (1.0 + bandIntensity * 0.5);
                     } else {
-                        // Subtle depth for out-of-band pixels with S-magnitude consideration
-                        effectiveDepth = Math.max(0.1, effectiveDepth + sMagnitudeBoost * 0.5);
+                        // UNIFORM FIX: Apply S-magnitude to ALL pixels, not just H-band
+                        effectiveDepth += sMagnitudeNormalized * depthScale * 0.15;
                     }
                     
-                    // Apply depth scale
-                    effectiveDepth = Math.max(0.05, Math.min(1.0, effectiveDepth));
+                    // Create 3D position from your original working coordinates
+                    const normalizedX = (x - centerX) / centerX;
+                    const normalizedY = (y - centerY) / centerY;
                     
-                    // Convert to 3D coordinates with enhanced depth scaling
-                    const normalizedX = (x - centerX) / (width * 0.5);
-                    const normalizedY = (y - centerY) / (height * 0.5);
-                    
-                    // Enhanced Z calculation using S-magnitude and band information
-                    let depthZ = (effectiveDepth - 0.5) * depthScale;
-                    
-                    // Add subtle displacement based on S-coordinates for more 3D effect
-                    const sCoordInfluence = 0.1;
-                    depthZ += (depthData.sCoord.x * sCoordInfluence * depthScale * 0.1);
-                    
-                    const point3D = {
-                        x: normalizedX,
-                        y: normalizedY,
-                        z: depthZ
+                    // UNIFORM FIX: Add small S-coordinate offset to ALL pixels
+                    let pos3D = {
+                        x: normalizedX + (depthData.sCoord.x * 0.02),
+                        y: normalizedY + (depthData.sCoord.y * 0.02),
+                        z: (effectiveDepth - 0.5) * depthScale
                     };
                     
-                    // Apply rotation
-                    const rotatedPoint = applyRotationMatrix(point3D, rotMatrix);
+                    // Apply rotation to the 3D position (your original working rotation)
+                    const rotatedPoint = applyRotationMatrix(pos3D, rotMatrix);
                     
-                    // Enhanced perspective projection
+                    // Your original working perspective projection
                     const z = rotatedPoint.z + viewDistance;
                     
                     if (z > 0.1) {
@@ -1047,9 +1027,9 @@
                         const projectedX = rotatedPoint.x * factor;
                         const projectedY = rotatedPoint.y * factor;
                         
-                        // Map back to screen coordinates with enhanced projection
-                        const screenX = Math.round(projectedX * width * 0.4 + centerX);
-                        const screenY = Math.round(projectedY * height * 0.4 + centerY);
+                        // Map back to screen coordinates (your original working mapping)
+                        const screenX = Math.round(projectedX * centerX + centerX);
+                        const screenY = Math.round(projectedY * centerY + centerY);
                         
                         if (screenX >= 0 && screenX < width && screenY >= 0 && screenY < height) {
                             const targetIdx = screenY * width + screenX;
@@ -1061,21 +1041,19 @@
                                 const sourceIdx = idx * 4;
                                 const targetPixelIdx = targetIdx * 4;
                                 
-                                // Enhanced shading with H-band awareness
-                                let shading = Math.max(0.2, Math.min(1.0, 0.4 + z * 0.3));
+                                // Your original working shading calculation
+                                let shading = Math.max(0.2, Math.min(1.0, 0.3 + z * 0.4));
                                 
-                                if (depthData.isInBand) {
-                                    // Enhanced visibility and contrast for H-band pixels
-                                    const bandIntensity = 1.0 - depthData.distanceFromBandCenter / (detectedBand.width * 0.5 + 0.001);
+                                if (depthData.isInBand && enhanceBandDepth) {
+                                    const bandIntensity = 1.0 - (depthData.distanceFromBandCenter / (detectedBand.width * 0.5 + 0.001));
                                     shading = Math.min(1.0, shading * (1.0 + bandIntensity * 0.3));
                                     
-                                    // Add subtle color enhancement for H-band regions
-                                    const enhancement = bandIntensity * 0.15;
-                                    outputData[targetPixelIdx] = Math.min(255, Math.round(data[sourceIdx] * shading * (1 + enhancement)));
-                                    outputData[targetPixelIdx + 1] = Math.min(255, Math.round(data[sourceIdx + 1] * shading * (1 + enhancement * 0.8)));
-                                    outputData[targetPixelIdx + 2] = Math.min(255, Math.round(data[sourceIdx + 2] * shading * (1 + enhancement * 0.6)));
+                                    // Enhanced color for H-band pixels
+                                    outputData[targetPixelIdx] = Math.min(255, Math.round(data[sourceIdx] * shading * 1.1));
+                                    outputData[targetPixelIdx + 1] = Math.min(255, Math.round(data[sourceIdx + 1] * shading * 1.05));
+                                    outputData[targetPixelIdx + 2] = Math.min(255, Math.round(data[sourceIdx + 2] * shading));
                                 } else {
-                                    // Standard shading for out-of-band pixels
+                                    // Standard shading for all other pixels
                                     outputData[targetPixelIdx] = Math.round(data[sourceIdx] * shading);
                                     outputData[targetPixelIdx + 1] = Math.round(data[sourceIdx + 1] * shading);
                                     outputData[targetPixelIdx + 2] = Math.round(data[sourceIdx + 2] * shading);
@@ -1090,11 +1068,10 @@
             ctx.putImageData(outputImageData, 0, 0);
             
             const processingTime = performance.now() - startTime;
-            console.log(`✅ Enhanced 3D view generated in ${processingTime.toFixed(2)}ms`);
+            console.log(`✅ Fixed uniform 3D view generated in ${processingTime.toFixed(2)}ms`);
         }
 
-        // ==================== CLEAN VISUALIZATION (ORIGINAL - UNCHANGED) ====================
-        
+        // Keep ALL your visualization and stereo functions exactly as they are
         function visualizeBandFocusedDepth(depthResult, width, height, config) {
             const depthCanvas = document.getElementById('depthCanvas');
             const depthCtx = depthCanvas.getContext('2d');
@@ -1203,8 +1180,7 @@
             rightCtx.putImageData(rightImageData, 0, 0);
         }
 
-        // ==================== ENHANCED MAIN APPLICATION ====================
-        
+        // Keep your original control class exactly as it is but with fixed function call
         class EnhancedHBand3DControl {
             constructor() {
                 this.currentImage = null;
@@ -1218,11 +1194,10 @@
                 
                 this.initializeControls();
                 this.setupInteractive3DRotation();
-                this.updateInfoPanel('Enhanced H-band 3D rotation ready... | Angledcrystals | 2025-06-08 04:45:51 UTC');
-                this.updateAnalysisPanel('Ready for enhanced H-band depth decoding and 3D rotation...');
+                this.updateInfoPanel('Fixed uniform H-band 3D rotation ready... | Angledcrystals | 2025-06-08 05:18:59 UTC');
+                this.updateAnalysisPanel('Ready for fixed uniform S-coordinate application...');
                 
-                console.log('✅ Enhanced H-band 3D control system initialized!');
-                console.log('🔄 Enhanced depth decoding for proper 3D rotation');
+                console.log('✅ Fixed uniform H-band 3D control system initialized!');
             }
 
             getConfiguration() {
@@ -1252,6 +1227,7 @@
                 };
             }
 
+            // Keep ALL your original control methods exactly as they are
             initializeControls() {
                 // File upload
                 document.getElementById('imageUpload')?.addEventListener('change', (e) => {
@@ -1269,7 +1245,7 @@
                     }
                 });
 
-                // Control synchronization with original logic
+                // Control synchronization - keep exactly as your original
                 this.setupControlSync('bandSizeMultiplier', null, 'bandSizeMultiplierValue', 'x');
                 this.setupControlSync('focusFactor', null, 'focusFactorValue', 'x');
                 this.setupControlSync('haditTheta', 'haditThetaNumber', 'haditThetaValue', '°');
@@ -1280,34 +1256,32 @@
                 this.setupControlSync('saturationWeight', null, 'saturationWeightValue', '');
                 this.setupControlSync('separation', null, 'separationValue', 'px');
                 this.setupControlSync('depthContrast', null, 'depthContrastValue', 'x');
-                
-                // Enhanced 3D rotation controls
                 this.setupControlSync('rotationX', 'rotationXNumber', 'rotationXValue', '°');
                 this.setupControlSync('rotationY', 'rotationYNumber', 'rotationYValue', '°');
                 this.setupControlSync('depthScale', null, 'depthScaleValue', 'x');
                 this.setupControlSync('viewDistance', null, 'viewDistanceValue', '');
 
-                // Precision presets (original)
+                // Precision presets - keep exactly as your original
                 document.getElementById('setHadit1Degree')?.addEventListener('click', () => this.setHaditPhi(1.0));
                 document.getElementById('setHadit01Degree')?.addEventListener('click', () => this.setHaditPhi(0.1));
                 document.getElementById('setHaditNearZero')?.addEventListener('click', () => this.setHaditPhi(0.5));
                 document.getElementById('setHaditNear180')?.addEventListener('click', () => this.setHaditPhi(179.5));
 
-                // Enhanced 3D rotation presets
+                // 3D rotation presets - keep exactly as your original
                 document.getElementById('resetRotation')?.addEventListener('click', () => this.resetRotation());
-                document.getElementById('topView')?.addEventListener('click', () => this.setRotation(-25, 0));
-                document.getElementById('sideView')?.addEventListener('click', () => this.setRotation(0, 35));
-                document.getElementById('isometricView')?.addEventListener('click', () => this.setRotation(-20, 25));
+                document.getElementById('topView')?.addEventListener('click', () => this.setRotation(-20, 0));
+                document.getElementById('sideView')?.addEventListener('click', () => this.setRotation(0, 30));
+                document.getElementById('isometricView')?.addEventListener('click', () => this.setRotation(-15, 20));
 
-                // Action buttons (original + enhanced)
+                // Action buttons - keep exactly as your original
                 document.getElementById('detectBand')?.addEventListener('click', () => this.processCurrentImage());
                 document.getElementById('expandBandFull')?.addEventListener('click', () => this.expandBandToFull());
                 document.getElementById('testPattern')?.addEventListener('click', () => this.generateTestPattern());
                 document.getElementById('animateHadit')?.addEventListener('click', () => this.toggleHaditAnimation());
-                document.getElementById('export3D')?.addEventListener('click', () => this.export3DRotatedView());
+                document.getElementById('export3D')?.addEventListener('click', () => this.exportFixed3DView());
                 document.getElementById('clearAll')?.addEventListener('click', () => this.clearAll());
 
-                // Real-time updates for all controls
+                // Real-time updates - keep exactly as your original
                 const updateTriggers = [
                     'bandDetectionMode', 'bandSizeMultiplier', 'focusFactor', 'haditTheta', 'haditPhi', 
                     'haditInfluence', 'sBounds', 'luminosityWeight', 'saturationWeight', 'separation', 
@@ -1325,7 +1299,7 @@
                     }
                 });
 
-                // Checkbox listeners
+                // Checkbox listeners - keep exactly as your original
                 const checkboxes = ['enableStereo', 'showBandVisualization', 'focusOnlyBand', 
                                   'cleanDepthMap', 'enable3DRotation', 'enhanceBandDepth'];
                 checkboxes.forEach(id => {
@@ -1382,7 +1356,7 @@
                         const rotX = document.getElementById('rotationX');
                         const rotY = document.getElementById('rotationY');
                         
-                        const sensitivity = 0.25; // Enhanced sensitivity for better control
+                        const sensitivity = 0.1; // Keep your original sensitivity
                         const newRotX = Math.max(-30, Math.min(30, parseFloat(rotX.value) + deltaY * sensitivity));
                         const newRotY = Math.max(-45, Math.min(45, parseFloat(rotY.value) + deltaX * sensitivity));
                         
@@ -1420,7 +1394,7 @@
                 ctx.drawImage(img, 0, 0);
                 this.currentImageData = ctx.getImageData(0, 0, img.width, img.height);
                 
-                this.updateInfoPanel(`Image loaded: ${img.width}x${img.height} | Detecting H-band... | Angledcrystals | 2025-06-08 04:49:16 UTC`);
+                this.updateInfoPanel(`Image loaded: ${img.width}x${img.height} | Processing with fixed uniform S-coordinates... | Angledcrystals | 2025-06-08 05:21:46 UTC`);
                 this.processCurrentImage();
             }
 
@@ -1440,7 +1414,7 @@
                         this.bandDetectionResult = detectHaditInformationBand(this.currentImageData, config);
                         detectedBand = this.bandDetectionResult.band;
                         
-                        // Step 2: Generate enhanced depth map
+                        // Step 2: Generate band-focused depth
                         this.depthResult = generateBandFocusedDepth(this.currentImageData, config, detectedBand);
                         
                         // Step 3: Visualize depth map
@@ -1449,16 +1423,16 @@
                         // Step 4: Generate stereo views
                         generateStereoViews(this.currentImage, this.depthResult, config);
                         
-                        // Step 5: Generate enhanced 3D rotated view
+                        // Step 5: Generate FIXED uniform 3D view
                         if (config.enable3DRotation) {
                             generateEnhanced3DRotatedView(this.currentImageData, this.depthResult, config);
                         }
                         
                         // Update info and analysis panels
-                        this.updateInfoPanel(`Enhanced 3D processing complete | θ=${config.haditTheta.toFixed(1)}°, φ=${config.haditPhi.toFixed(1)}° | Band: ${detectedBand.min.toFixed(2)}-${detectedBand.max.toFixed(2)} | 3D: X=${config.rotationX.toFixed(1)}°, Y=${config.rotationY.toFixed(1)}° | Scale=${config.depthScale.toFixed(1)}x | Angledcrystals | 2025-06-08 04:49:16 UTC`);
+                        this.updateInfoPanel(`Fixed uniform H-band 3D processing complete | θ=${config.haditTheta.toFixed(1)}°, φ=${config.haditPhi.toFixed(1)}° | Band: ${detectedBand.min.toFixed(2)}-${detectedBand.max.toFixed(2)} | Depth Scale=${config.depthScale.toFixed(1)}x | View: X=${config.rotationX.toFixed(1)}°, Y=${config.rotationY.toFixed(1)}° | Angledcrystals | 2025-06-08 05:21:46 UTC`);
                         
                         this.updateAnalysisPanel(`
-⚡ Enhanced H-band 3D Analysis
+⚡ Fixed Uniform H-band 3D Analysis
 📊 Band Detection: ${config.bandDetectionMode}
 🎯 H-band range: ${detectedBand.min.toFixed(2)} to ${detectedBand.max.toFixed(2)}
 📈 Band confidence: ${detectedBand.confidence.toFixed(3)}
@@ -1467,20 +1441,21 @@
 🌊 Influence: ${config.haditInfluence.toFixed(1)}
 🎯 Focus Factor: ${config.focusFactor.toFixed(1)}x
 📐 S Bounds: ±${config.sBounds.toFixed(1)}
-🔄 3D Rotation: X=${config.rotationX.toFixed(1)}°, Y=${config.rotationY.toFixed(1)}°
-🏔️ Depth Scale: ${config.depthScale.toFixed(1)}x
+🏔️ 3D Depth Scale: ${config.depthScale.toFixed(1)}x
+🔄 View Rotation: X=${config.rotationX.toFixed(1)}°, Y=${config.rotationY.toFixed(1)}°
 🎬 View Distance: ${config.viewDistance.toFixed(1)}
 💡 Luminosity Weight: ${config.luminosityWeight.toFixed(2)}
 🌈 Saturation Weight: ${config.saturationWeight.toFixed(2)}
 🔧 Stereo Separation: ${config.separation}px
 🗺️ Depth Contrast: ${config.depthContrast.toFixed(1)}x
-🚀 Enhanced Band Depth: ${config.enhanceBandDepth ? 'ON' : 'OFF'}
+🔄 Enhanced Band Depth: ${config.enhanceBandDepth ? 'YES' : 'NO'}
+🛠️ Uniform S-Coordinate Fix: APPLIED
 ⏱️ Processing time: ${this.depthResult.stats.processingTime.toFixed(2)}ms
                         `);
                         
                     } catch (error) {
-                        console.error('Processing error:', error);
-                        this.updateInfoPanel('Error during enhanced 3D processing: ' + error.message);
+                        console.error('Fixed uniform 3D processing error:', error);
+                        this.updateInfoPanel('Error during fixed uniform 3D processing: ' + error.message);
                     } finally {
                         this.isProcessing = false;
                         rotatedCanvas.classList.remove('processing');
@@ -1537,41 +1512,41 @@
                 canvas.height = 300;
                 const ctx = canvas.getContext('2d');
                 
-                // Create an enhanced test pattern with better H-band characteristics
+                // Create test pattern with your original gradient
                 for (let y = 0; y < canvas.height; y++) {
                     for (let x = 0; x < canvas.width; x++) {
                         const hue = (x / canvas.width) * 360;
-                        const sat = 60 + (y / canvas.height) * 20;
-                        const lightness = 25 + (y / canvas.height) * 50;
+                        const sat = 30 + (y / canvas.height) * 50;
+                        const lightness = 20 + (y / canvas.height) * 60;
                         
                         ctx.fillStyle = `hsl(${hue}, ${sat}%, ${lightness}%)`;
                         ctx.fillRect(x, y, 1, 1);
                     }
                 }
                 
-                // Add geometric patterns for enhanced H-band detection
+                // Add your original test shapes
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                ctx.fillRect(50, 50, 120, 60);
-                ctx.fillRect(230, 150, 120, 60);
+                ctx.fillRect(75, 75, 75, 35);
+                ctx.fillRect(250, 175, 75, 35);
                 
-                ctx.fillStyle = 'rgba(255, 100, 100, 0.8)';
+                ctx.fillStyle = 'rgba(255, 120, 120, 0.85)';
                 ctx.beginPath();
-                ctx.arc(150, 150, 40, 0, 2 * Math.PI);
+                ctx.arc(125, 125, 25, 0, 2 * Math.PI);
                 ctx.fill();
                 
-                ctx.fillStyle = 'rgba(100, 100, 255, 0.8)';
+                ctx.fillStyle = 'rgba(120, 120, 255, 0.85)';
                 ctx.beginPath();
-                ctx.arc(320, 80, 35, 0, 2 * Math.PI);
+                ctx.arc(275, 105, 22, 0, 2 * Math.PI);
                 ctx.fill();
                 
-                // Load the enhanced test pattern
+                // Load the test pattern
                 const img = new Image();
                 img.onload = () => {
                     this.loadImage(img);
                 };
                 img.src = canvas.toDataURL();
                 
-                this.updateInfoPanel('Enhanced test pattern generated | Processing... | Angledcrystals | 2025-06-08 04:49:16 UTC');
+                this.updateInfoPanel('Fixed uniform test pattern generated | Processing... | Angledcrystals | 2025-06-08 05:21:46 UTC');
             }
 
             toggleHaditAnimation() {
@@ -1579,11 +1554,11 @@
                     cancelAnimationFrame(this.animationFrame);
                     this.animationFrame = null;
                     document.getElementById('animateHadit').textContent = '🌀 Animate Hadit';
-                    this.updateInfoPanel('Hadit animation stopped | Angledcrystals | 2025-06-08 04:49:16 UTC');
+                    this.updateInfoPanel('Hadit animation stopped | Angledcrystals | 2025-06-08 05:21:46 UTC');
                 } else {
                     this.startHaditAnimation();
                     document.getElementById('animateHadit').textContent = '⏹️ Stop Animation';
-                    this.updateInfoPanel('Hadit animation started | Angledcrystals | 2025-06-08 04:49:16 UTC');
+                    this.updateInfoPanel('Hadit animation started | Fixed uniform S-coordinates updating... | Angledcrystals | 2025-06-08 05:21:46 UTC');
                 }
             }
 
@@ -1592,7 +1567,7 @@
                 
                 const animate = (currentTime) => {
                     const elapsed = currentTime - startTime;
-                    const cycle = (elapsed / 6000) % 1; // 6 second cycle for smoother animation
+                    const cycle = (elapsed / 8000) % 1; // 8 second cycle like your original
                     
                     const theta = cycle * 360;
                     const phi = 45 + Math.sin(cycle * Math.PI * 2) * 25;
@@ -1613,19 +1588,19 @@
                 this.animationFrame = requestAnimationFrame(animate);
             }
 
-            export3DRotatedView() {
+            exportFixed3DView() {
                 try {
                     const canvas = document.getElementById('rotatedCanvas');
                     const config = this.getConfiguration();
                     const link = document.createElement('a');
-                    link.download = `enhanced-hband-3d-theta${config.haditTheta.toFixed(0)}-phi${config.haditPhi.toFixed(0)}-rotX${config.rotationX.toFixed(0)}-rotY${config.rotationY.toFixed(0)}-scale${config.depthScale.toFixed(1)}.png`;
+                    link.download = `fixed-uniform-hband-3d-theta${config.haditTheta.toFixed(0)}-phi${config.haditPhi.toFixed(0)}-depth${config.depthScale.toFixed(1)}-rotX${config.rotationX.toFixed(0)}-rotY${config.rotationY.toFixed(0)}.png`;
                     link.href = canvas.toDataURL();
                     link.click();
                     
-                    this.updateInfoPanel('Enhanced 3D rotated view exported successfully! | Angledcrystals | 2025-06-08 04:49:16 UTC');
+                    this.updateInfoPanel('Fixed uniform H-band 3D view exported successfully! | Angledcrystals | 2025-06-08 05:21:46 UTC');
                 } catch (error) {
                     console.error('Export error:', error);
-                    this.updateInfoPanel('Error exporting enhanced 3D view');
+                    this.updateInfoPanel('Error exporting fixed 3D view');
                 }
             }
 
@@ -1653,8 +1628,8 @@
                     document.getElementById('animateHadit').textContent = '🌀 Animate Hadit';
                 }
                 
-                this.updateInfoPanel('All cleared | Enhanced H-band 3D rotation ready... | Angledcrystals | 2025-06-08 04:49:16 UTC');
-                this.updateAnalysisPanel('Ready for enhanced H-band depth decoding and 3D rotation...');
+                this.updateInfoPanel('All cleared | Fixed uniform H-band 3D rotation ready... | Angledcrystals | 2025-06-08 05:21:46 UTC');
+                this.updateAnalysisPanel('Ready for fixed uniform S-coordinate application...');
             }
 
             updateInfoPanel(message) {
@@ -1667,12 +1642,12 @@
             updateAnalysisPanel(message) {
                 const panel = document.getElementById('analysisPanel');
                 if (panel) {
-                    panel.innerHTML = `<div style="color: #88ff00; font-weight: bold;">⚡ Enhanced H-band 3D Analysis</div><div style="white-space: pre-line; font-family: 'Courier New', monospace; font-size: 10px;">${message}</div>`;
+                    panel.innerHTML = `<div style="color: #88ff00; font-weight: bold;">⚡ Fixed Uniform H-band 3D Analysis</div><div style="white-space: pre-line; font-family: 'Courier New', monospace; font-size: 10px;">${message}</div>`;
                 }
             }
         }
 
-        // Initialize the enhanced system
+        // Initialize the FIXED uniform H-band 3D system
         document.addEventListener('DOMContentLoaded', () => {
             new EnhancedHBand3DControl();
         });
